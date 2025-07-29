@@ -1,0 +1,80 @@
+{% extends 'base.html' %} {% block title %}
+<center>Coffee Products</center>
+{% endblock %} {% block content %}
+<center>
+  <h2>Productos y Precios</h2>
+</center>
+
+<!-- Main container for products -->
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px">
+  <ul style="list-style-type: none; padding: 0">
+    {% for prod in products %}
+    <li
+      style="
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+      "
+    >
+      <!-- Product Image -->
+      <div style="text-align: center; margin-bottom: 15px">
+        {% if prod.photo %}
+        <img
+          src="{{ prod.photo.url }}"
+          alt="{{ prod.name }}"
+          style="
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 8px;
+          "
+        />
+        {% else %}
+        <img
+          src="https://via.placeholder.com/300"
+          alt="Placeholder image"
+          style="
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 8px;
+          "
+        />
+        {% endif %}
+      </div>
+
+      <!-- Product Info -->
+      <div style="text-align: center">
+        <h3 style="font-size: 1.5em; margin: 10px 0">{{ prod.name }}</h3>
+        <p style="font-size: 1.2em; color: #333">${{ prod.price }}</p>
+        <p style="font-size: 1em; color: #666">{{ prod.description }}</p>
+      </div>
+
+      <!-- Button -->
+      <div style="text-align: center; margin-top: 20px">
+        <a
+          href="#"
+          style="
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #007bff;
+            text-decoration: none;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+          "
+          onmouseover="this.style.backgroundColor='#007BFF'; this.style.color='#fff';"
+          onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.color='#007BFF';"
+        >
+          BUY
+        </a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
