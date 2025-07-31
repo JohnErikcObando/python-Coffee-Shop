@@ -1,0 +1,158 @@
+{% extends "base.html" %} {% block content %}
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg">
+  <!-- Encabezado con información de la orden -->
+  <div class="border-b pb-4 mb-6">
+    <h1 class="text-3xl font-bold text-amber-800 mb-2">Detalles de tu Orden</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-sm text-gray-500">Número de orden</p>
+        <p class="text-lg font-semibold">#{{ order.id }}</p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Fecha</p>
+        <p class="text-lg">{{ order.order_date|date:"d M Y, H:i" }}</p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Estado</p>
+        <p class="text-lg">
+          <span
+            class="px-2 py-1 rounded-full text-xs font-medium {% if order.is_active %}bg-green-100 text-green-800{% else %}bg-gray-100 text-gray-800{% endif %}"
+          >
+            {% if order.is_active %}Activa{% else %}Completada{% endif %}
+          </span>
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Cliente</p>
+        <p class="text-lg">
+          {{ order.user.get_full_name|default:order.user.username }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de productos -->
+  <div class="mb-8">
+    <h2 class="text-xl font-bold mb-4 flex justify-between items-center">
+      <span>Artículos</span>
+      <span class="text-sm font-normal">
+        {{ order.orderproduct_set.count }} 
+      </span>
+    </h2>
+
+    {% if order.orderproduct_set.all %}
+    <div class="divide-y divide-gray-200">
+      {% for product_order in order.orderproduct_set.all %}
+      <div class="py-4 flex justify-between items-start">
+        <div class="flex items-start space-x-4">
+          <div class="bg-gray-100 rounded-lg p-2">
+            <svg
+              class="w-8 h-8 text-amber-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-medium">{{ product_order.product.name }}</h3>
+            <p class="text-sm text-gray-500">
+              Cantidad: {{ product_order.quantity }}
+            </p>
+            {% if product_order.special_instructions %}
+            <p class="text-xs text-amber-600 mt-1">
+              <span class="font-semibold">Notas:</span> {{
+              product_order.special_instructions }}
+            </p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="font-semibold">${{ product_order.product.price }}</p>
+          <p class="text-sm text-gray-500">
+            Total: ${{ product_order.get_total }}
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8 bg-gray-50 rounded-lg">
+      <svg
+        class="mx-auto h-12 w-12 text-gray-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">Orden vacía</h3>
+      <p class="mt-1 text-sm text-gray-500">No hay artículos en esta orden</p>
+      <div class="mt-6">
+        {% comment %} <a href="{% url 'orders:add_product' %}" class="btn-amber">
+          Agregar productos
+        </a> {% endcomment %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Resumen y total -->
+  <div class="bg-gray-50 p-4 rounded-lg">
+    <div class="flex justify-between py-2">
+      <span>Subtotal</span>
+      <span>${{ order.get_subtotal }}</span>
+    </div>
+    <div class="flex justify-between py-2">
+      <span>Envío</span>
+      <span>${{ order.shipping_cost }}</span>
+    </div>
+    <div
+      class="flex justify-between py-2 border-t border-gray-200 font-bold text-lg"
+    >
+      <span>Total</span>
+      <span>${{ order.get_total }}</span>
+    </div>
+  </div>
+
+  <!-- Acciones -->
+  <div
+    class="mt-8 flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4"
+  >
+    {% if order.is_active %}
+    {% comment %} <a href="{% url 'orders:add_product' %}" class="btn-amber-outline">
+      <svg
+        class="-ml-1 mr-2 h-5 w-5"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      > {% endcomment %}
+        <path
+          fill-rule="evenodd"
+          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      Agregar más productos
+    </a>
+    <a href="#" class="btn-amber"> Finalizar orden </a>
+    {% else %}
+    <a href="{% url 'orders:create_order' %}" class="btn-amber">
+      Crear nueva orden
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

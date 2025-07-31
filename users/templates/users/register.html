@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% load tailwind_filters %} {% block content %}
+<div
+  class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
+>
+  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+    <!-- Encabezado (igual que antes) -->
+
+    <form class="mt-8 space-y-6" method="post">
+      {% csrf_token %}
+
+      <!-- Reemplaza el bloque problemático con crispy forms -->
+      {{ form|crispy }}
+
+      <!-- Checkbox de términos -->
+      <div class="flex items-center">
+        <input
+          id="terms"
+          name="terms"
+          type="checkbox"
+          required
+          class="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
+        />
+        <label for="terms" class="ml-2 block text-sm text-gray-700">
+          Acepto los
+          <a href="#" class="font-medium text-amber-600 hover:text-amber-500"
+            >Términos</a
+          >
+        </label>
+      </div>
+
+      <!-- Botón de submit -->
+      <button type="submit" class="w-full btn-amber">Registrarse</button>
+    </form>
+
+    <!-- Enlace a login -->
+    <div class="text-center text-sm">
+      <p class="text-gray-600">
+        ¿Ya tienes cuenta?
+        <a
+          href="{% url 'login' %}"
+          class="font-medium text-amber-600 hover:text-amber-500"
+        >
+          Inicia sesión
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
