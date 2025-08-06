@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_tailwind',
+    'rest_framework',
     'products',
     'users',
     'orders',
@@ -135,3 +136,9 @@ CRISPY_TEMPLATE_PACK = 'tailwind'
 LOGIN_REDIRECT_URL = 'list_product'
 LOGOUT_REDIRECT_URL = 'list_product'
 LOGIN_URL = 'login'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}

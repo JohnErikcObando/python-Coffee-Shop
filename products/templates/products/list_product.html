@@ -72,9 +72,21 @@
         >
           BUY
         </a>
+
+        <form action="{% url 'add_product' %}" class="mt-4" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="product" value="{{prod.id}}" />
+          <button
+            class="block w-full rounded bg-yellow-400 p-4 text-sm font-medium transition hover:scale-105"
+          >
+            Agregar al pedido
+          </button>
+        </form>
       </div>
     </li>
+
     {% endfor %}
   </ul>
 </div>
+
 {% endblock %}
